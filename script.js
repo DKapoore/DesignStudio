@@ -1,4 +1,5 @@
-// script.js
+// script.js - Main JavaScript for Graphic Design Portfolio Website
+
 document.addEventListener('DOMContentLoaded', function() {
     // Mobile Navigation Toggle
     const hamburger = document.querySelector('.hamburger');
@@ -14,8 +15,10 @@ document.addEventListener('DOMContentLoaded', function() {
     // Close mobile menu when clicking a link
     document.querySelectorAll('.nav-links a').forEach(link => {
         link.addEventListener('click', function() {
-            hamburger.classList.remove('active');
-            navLinks.classList.remove('active');
+            if (hamburger) {
+                hamburger.classList.remove('active');
+                navLinks.classList.remove('active');
+            }
         });
     });
     
@@ -34,13 +37,29 @@ document.addEventListener('DOMContentLoaded', function() {
                 timestamp: new Date().toISOString()
             };
             
+            // Validate form
+            if (!formData.name || !formData.email || !formData.mobile || !formData.message) {
+                showFormMessage('Please fill in all fields.', 'error');
+                return;
+            }
+            
+            if (!validateEmail(formData.email)) {
+                showFormMessage('Please enter a valid email address.', 'error');
+                return;
+            }
+            
+            if (!validatePhone(formData.mobile)) {
+                showFormMessage('Please enter a valid mobile number.', 'error');
+                return;
+            }
+            
             // Show loading state
             const submitBtn = contactForm.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Sending...';
             submitBtn.disabled = true;
             
-            // Google Apps Script URL (you'll need to replace with your own)
+            // Google Apps Script URL (Replace with your own after deployment)
             const scriptURL = 'https://script.google.com/macros/s/AKfycbw3rA5E_Nb5mYHp_K8fPxRw6WQkLp4m5qV7Xq6Z9XH5t4vJw/exec';
             
             // Send data to Google Sheets
@@ -54,54 +73,43 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(() => {
                 // Show success message
-                const formMessage = document.getElementById('formMessage');
-                formMessage.textContent = 'Thank you! Your message has been sent successfully.';
-                formMessage.className = 'form-message success';
+                showFormMessage('Thank you! Your message has been sent successfully. I\'ll get back to you soon.', 'success');
                 
                 // Reset form
                 contactForm.reset();
             })
             .catch(error => {
                 // Show error message
-                const formMessage = document.getElementById('formMessage');
-                formMessage.textContent = 'Oops! Something went wrong. Please try again.';
-                formMessage.className = 'form-message error';
+                showFormMessage('Oops! Something went wrong. Please try again or contact me via WhatsApp.', 'error');
                 console.error('Error:', error);
             })
             .finally(() => {
                 // Reset button state
                 submitBtn.innerHTML = originalText;
                 submitBtn.disabled = false;
-                
-                // Hide message after 5 seconds
-                setTimeout(() => {
-                    const formMessage = document.getElementById('formMessage');
-                    formMessage.style.display = 'none';
-                }, 5000);
             });
         });
     }
     
     // Gallery functionality
-    if (window.location.pathname.includes('gallery.html')) {
+    if (window.location.pathname.includes('gallery.html') || window.location.pathname.endsWith('gallery.html')) {
         initGallery();
     }
     
     // Admin functionality
-    if (window.location.pathname.includes('admin.html')) {
+    if (window.location.pathname.includes('admin.html') || window.location.pathname.endsWith('admin.html')) {
         initAdminPanel();
     }
     
     // Add smooth scrolling for anchor links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
-            e.preventDefault();
-            
             const targetId = this.getAttribute('href');
             if (targetId === '#') return;
             
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
+                e.preventDefault();
                 window.scrollTo({
                     top: targetElement.offsetTop - 80,
                     behavior: 'smooth'
@@ -125,12 +133,38 @@ document.addEventListener('DOMContentLoaded', function() {
     }, observerOptions);
     
     // Observe elements for animation
-    document.querySelectorAll('.service-card, .contact-item, .stat').forEach(el => {
+    document.querySelectorAll('.service-card, .contact-item, .stat, .hero-title, .hero-subtitle').forEach(el => {
         observer.observe(el);
     });
+    
+    // Form validation helper functions
+    function validateEmail(email) {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    }
+    
+    function validatePhone(phone) {
+        const re = /^[0-9]{10}$/;
+        return re.test(phone);
+    }
+    
+    function showFormMessage(message, type) {
+        const formMessage = document.getElementById('formMessage');
+        if (formMessage) {
+            formMessage.textContent = message;
+            formMessage.className = `form-message ${type}`;
+            formMessage.style.display = 'block';
+            
+            // Hide message after 5 seconds for success, 10 seconds for error
+            const hideTime = type === 'success' ? 5000 : 10000;
+            setTimeout(() => {
+                formMessage.style.display = 'none';
+            }, hideTime);
+        }
+    }
 });
 
-// Gallery Functions
+// ==================== GALLERY FUNCTIONS ====================
 function initGallery() {
     let galleryData = { images: [], videos: [] };
     let currentTab = 'images';
@@ -143,22 +177,46 @@ function initGallery() {
         const savedData = localStorage.getItem('galleryData');
         
         if (savedData) {
-            galleryData = JSON.parse(savedData);
-            renderGallery();
+            try {
+                galleryData = JSON.parse(savedData);
+                renderGallery();
+            } catch (error) {
+                console.error('Error parsing saved gallery data:', error);
+                loadFromJSON();
+            }
         } else {
-            // Load from gallery.json file
-            fetch('gallery.json')
-                .then(response => response.json())
-                .then(data => {
-                    galleryData = data;
-                    renderGallery();
-                })
-                .catch(error => {
-                    console.error('Error loading gallery data:', error);
-                    document.getElementById('images-grid').innerHTML = 
-                        '<p class="error-message">Failed to load gallery. Please try again later.</p>';
-                });
+            loadFromJSON();
         }
+    }
+    
+    // Load from gallery.json file
+    function loadFromJSON() {
+        fetch('gallery.json')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                return response.json();
+            })
+            .then(data => {
+                galleryData = data;
+                renderGallery();
+                // Save to localStorage for consistency
+                localStorage.setItem('galleryData', JSON.stringify(data));
+            })
+            .catch(error => {
+                console.error('Error loading gallery data:', error);
+                const imagesGrid = document.getElementById('images-grid');
+                const videosGrid = document.getElementById('videos-grid');
+                
+                if (imagesGrid) {
+                    imagesGrid.innerHTML = 
+                        '<p class="error-message" style="text-align: center; color: var(--error-color); padding: 40px;">Failed to load gallery. Please try again later.</p>';
+                }
+                if (videosGrid) {
+                    videosGrid.innerHTML = '';
+                }
+            });
     }
     
     // Render gallery based on current tab
@@ -167,27 +225,27 @@ function initGallery() {
         const videosGrid = document.getElementById('videos-grid');
         
         // Clear existing content
-        imagesGrid.innerHTML = '';
-        videosGrid.innerHTML = '';
+        if (imagesGrid) imagesGrid.innerHTML = '';
+        if (videosGrid) videosGrid.innerHTML = '';
         
         // Render images
         if (galleryData.images && galleryData.images.length > 0) {
             galleryData.images.forEach((item, index) => {
                 const galleryItem = createGalleryItem(item, 'image', index);
-                imagesGrid.appendChild(galleryItem);
+                if (imagesGrid) imagesGrid.appendChild(galleryItem);
             });
-        } else {
-            imagesGrid.innerHTML = '<p class="no-items">No images added yet.</p>';
+        } else if (imagesGrid) {
+            imagesGrid.innerHTML = '<p class="no-items" style="text-align: center; padding: 40px; color: var(--gray-color);">No images added yet.</p>';
         }
         
         // Render videos
         if (galleryData.videos && galleryData.videos.length > 0) {
             galleryData.videos.forEach((item, index) => {
                 const galleryItem = createGalleryItem(item, 'video', index);
-                videosGrid.appendChild(galleryItem);
+                if (videosGrid) videosGrid.appendChild(galleryItem);
             });
-        } else {
-            videosGrid.innerHTML = '<p class="no-items">No videos added yet.</p>';
+        } else if (videosGrid) {
+            videosGrid.innerHTML = '<p class="no-items" style="text-align: center; padding: 40px; color: var(--gray-color);">No videos added yet.</p>';
         }
         
         // Initialize lightbox
@@ -201,18 +259,40 @@ function initGallery() {
         itemDiv.setAttribute('data-index', index);
         itemDiv.setAttribute('data-type', type);
         
+        let mediaElement;
+        
         if (type === 'image') {
-            const img = document.createElement('img');
-            img.src = item.url;
-            img.alt = `Design work ${index + 1}`;
-            img.loading = 'lazy';
-            itemDiv.appendChild(img);
+            mediaElement = document.createElement('img');
+            mediaElement.src = item.url;
+            mediaElement.alt = `Design work ${index + 1}`;
+            mediaElement.loading = 'lazy';
+            mediaElement.onerror = function() {
+                this.src = 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80';
+                this.alt = 'Image failed to load';
+            };
         } else {
-            const video = document.createElement('video');
-            video.src = item.url;
-            video.controls = false;
-            video.muted = true;
-            itemDiv.appendChild(video);
+            mediaElement = document.createElement('video');
+            mediaElement.src = item.url;
+            mediaElement.controls = false;
+            mediaElement.muted = true;
+            mediaElement.poster = 'https://images.unsplash.com/photo-1558655146-9f40138edfeb?ixlib=rb-4.0.3&auto=format&fit=crop&w=1000&q=80';
+            mediaElement.onerror = function() {
+                this.style.display = 'none';
+                const errorMsg = document.createElement('div');
+                errorMsg.style.cssText = 'padding: 40px; text-align: center; color: var(--gray-color);';
+                errorMsg.textContent = 'Video failed to load';
+                this.parentNode.appendChild(errorMsg);
+            };
+        }
+        
+        itemDiv.appendChild(mediaElement);
+        
+        // Add caption if exists
+        if (item.caption) {
+            const captionDiv = document.createElement('div');
+            captionDiv.className = 'gallery-item-caption';
+            captionDiv.textContent = item.caption;
+            itemDiv.appendChild(captionDiv);
         }
         
         return itemDiv;
@@ -227,6 +307,8 @@ function initGallery() {
         const lightboxNext = document.querySelector('.lightbox-next');
         const lightboxCaption = document.querySelector('.lightbox-caption');
         
+        if (!lightbox || !lightboxContent) return;
+        
         // Get all gallery items
         const galleryItems = document.querySelectorAll('.gallery-item');
         
@@ -240,22 +322,32 @@ function initGallery() {
         });
         
         // Close lightbox
-        lightboxClose.addEventListener('click', closeLightbox);
-        lightbox.addEventListener('click', function(e) {
-            if (e.target === lightbox) {
-                closeLightbox();
-            }
-        });
+        if (lightboxClose) {
+            lightboxClose.addEventListener('click', closeLightbox);
+        }
+        
+        if (lightbox) {
+            lightbox.addEventListener('click', function(e) {
+                if (e.target === lightbox) {
+                    closeLightbox();
+                }
+            });
+        }
         
         // Navigation
-        lightboxPrev.addEventListener('click', showPrevItem);
-        lightboxNext.addEventListener('click', showNextItem);
+        if (lightboxPrev) {
+            lightboxPrev.addEventListener('click', showPrevItem);
+        }
+        
+        if (lightboxNext) {
+            lightboxNext.addEventListener('click', showNextItem);
+        }
         
         // Keyboard navigation
         document.addEventListener('keydown', function(e) {
             if (!lightbox.classList.contains('active')) return;
             
-            if (e.key === 'Escape') closeLightbox();
+            if (e.key === 'Escape' || e.key === 'Esc') closeLightbox();
             if (e.key === 'ArrowLeft') showPrevItem();
             if (e.key === 'ArrowRight') showNextItem();
         });
@@ -294,39 +386,63 @@ function initGallery() {
         function updateLightboxContent() {
             const item = currentItems[currentLightboxIndex];
             
+            if (!item) return;
+            
             // Clear previous content
             lightboxContent.innerHTML = '';
             
+            let mediaElement;
+            
             if (currentTab === 'image') {
-                const img = document.createElement('img');
-                img.src = item.url;
-                img.alt = `Design work ${currentLightboxIndex + 1}`;
-                lightboxContent.appendChild(img);
-                lightboxCaption.textContent = `Image ${currentLightboxIndex + 1} of ${currentItems.length}`;
+                mediaElement = document.createElement('img');
+                mediaElement.src = item.url;
+                mediaElement.alt = `Design work ${currentLightboxIndex + 1}`;
+                mediaElement.style.maxWidth = '100%';
+                mediaElement.style.maxHeight = '90vh';
+                mediaElement.style.borderRadius = '10px';
+                mediaElement.style.display = 'block';
             } else {
-                const video = document.createElement('video');
-                video.src = item.url;
-                video.controls = true;
-                video.autoplay = true;
-                lightboxContent.appendChild(video);
-                lightboxCaption.textContent = `Video ${currentLightboxIndex + 1} of ${currentItems.length}`;
+                mediaElement = document.createElement('video');
+                mediaElement.src = item.url;
+                mediaElement.controls = true;
+                mediaElement.autoplay = true;
+                mediaElement.style.maxWidth = '100%';
+                mediaElement.style.maxHeight = '90vh';
+                mediaElement.style.borderRadius = '10px';
+                mediaElement.style.display = 'block';
             }
             
-            // Add close button
-            lightboxContent.appendChild(lightboxClose);
+            lightboxContent.appendChild(mediaElement);
             
-            // Add navigation buttons
+            // Update caption
+            if (lightboxCaption) {
+                lightboxCaption.textContent = item.caption || `${currentTab === 'image' ? 'Image' : 'Video'} ${currentLightboxIndex + 1} of ${currentItems.length}`;
+            }
+            
+            // Create and add close button
+            const closeBtn = document.createElement('button');
+            closeBtn.className = 'lightbox-close';
+            closeBtn.innerHTML = '<i class="fas fa-times"></i>';
+            closeBtn.addEventListener('click', closeLightbox);
+            lightboxContent.appendChild(closeBtn);
+            
+            // Create and add navigation buttons
             const navDiv = document.createElement('div');
             navDiv.className = 'lightbox-nav';
-            navDiv.innerHTML = `
-                <button class="lightbox-prev"><i class="fas fa-chevron-left"></i></button>
-                <button class="lightbox-next"><i class="fas fa-chevron-right"></i></button>
-            `;
-            lightboxContent.appendChild(navDiv);
             
-            // Re-attach event listeners
-            lightboxContent.querySelector('.lightbox-prev').addEventListener('click', showPrevItem);
-            lightboxContent.querySelector('.lightbox-next').addEventListener('click', showNextItem);
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'lightbox-prev';
+            prevBtn.innerHTML = '<i class="fas fa-chevron-left"></i>';
+            prevBtn.addEventListener('click', showPrevItem);
+            
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'lightbox-next';
+            nextBtn.innerHTML = '<i class="fas fa-chevron-right"></i>';
+            nextBtn.addEventListener('click', showNextItem);
+            
+            navDiv.appendChild(prevBtn);
+            navDiv.appendChild(nextBtn);
+            lightboxContent.appendChild(navDiv);
         }
     }
     
@@ -341,8 +457,11 @@ function initGallery() {
             this.classList.add('active');
             
             // Show selected tab content
-            document.getElementById('images-grid').style.display = tab === 'images' ? 'block' : 'none';
-            document.getElementById('videos-grid').style.display = tab === 'videos' ? 'block' : 'none';
+            const imagesGrid = document.getElementById('images-grid');
+            const videosGrid = document.getElementById('videos-grid');
+            
+            if (imagesGrid) imagesGrid.style.display = tab === 'images' ? 'block' : 'none';
+            if (videosGrid) videosGrid.style.display = tab === 'videos' ? 'block' : 'none';
             
             currentTab = tab;
         });
@@ -352,11 +471,42 @@ function initGallery() {
     loadGalleryData();
 }
 
-// Admin Panel Functions
+// ==================== ADMIN PANEL FUNCTIONS ====================
 function initAdminPanel() {
     const loginForm = document.getElementById('loginForm');
     const dashboard = document.getElementById('dashboard');
     const logoutBtn = document.getElementById('logoutBtn');
+    const changePasswordForm = document.getElementById('changePasswordForm');
+    
+    // Default admin credentials
+    const defaultCredentials = {
+        username: 'admin',
+        password: 'admin123'
+    };
+    
+    // Load admin credentials from localStorage or use defaults
+    function getAdminCredentials() {
+        const savedCredentials = localStorage.getItem('adminCredentials');
+        if (savedCredentials) {
+            try {
+                return JSON.parse(savedCredentials);
+            } catch (error) {
+                console.error('Error parsing admin credentials:', error);
+                return defaultCredentials;
+            }
+        }
+        return defaultCredentials;
+    }
+    
+    // Save admin credentials to localStorage
+    function saveAdminCredentials(credentials) {
+        localStorage.setItem('adminCredentials', JSON.stringify(credentials));
+    }
+    
+    // Initialize admin credentials if not exists
+    if (!localStorage.getItem('adminCredentials')) {
+        saveAdminCredentials(defaultCredentials);
+    }
     
     // Check if user is already logged in
     if (localStorage.getItem('adminLoggedIn') === 'true') {
@@ -371,17 +521,64 @@ function initAdminPanel() {
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const username = document.getElementById('username').value;
+            const username = document.getElementById('username').value.trim();
             const password = document.getElementById('password').value;
             
-            // Simple authentication (in production, this should be server-side)
-            if (username === 'admin' && password === 'admin123') {
+            // Get stored credentials
+            const adminCredentials = getAdminCredentials();
+            
+            // Authentication
+            if (username === adminCredentials.username && password === adminCredentials.password) {
                 localStorage.setItem('adminLoggedIn', 'true');
                 showDashboard();
                 loadAdminData();
+                
+                // Clear login form
+                loginForm.reset();
             } else {
-                alert('Invalid username or password. Try admin/admin123 for demo.');
+                showAdminMessage('Invalid username or password.', 'error');
             }
+        });
+    }
+    
+    // Change Password form submission
+    if (changePasswordForm) {
+        changePasswordForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const currentPassword = document.getElementById('currentPassword').value;
+            const newPassword = document.getElementById('newPassword').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+            
+            // Get current credentials
+            const adminCredentials = getAdminCredentials();
+            
+            // Validate current password
+            if (currentPassword !== adminCredentials.password) {
+                showAdminMessage('Current password is incorrect.', 'error');
+                return;
+            }
+            
+            // Validate new password
+            if (newPassword.length < 6) {
+                showAdminMessage('New password must be at least 6 characters long.', 'error');
+                return;
+            }
+            
+            if (newPassword !== confirmPassword) {
+                showAdminMessage('New passwords do not match.', 'error');
+                return;
+            }
+            
+            // Update credentials
+            adminCredentials.password = newPassword;
+            saveAdminCredentials(adminCredentials);
+            
+            // Show success message
+            showAdminMessage('Password changed successfully!', 'success');
+            
+            // Clear form
+            changePasswordForm.reset();
         });
     }
     
@@ -390,6 +587,7 @@ function initAdminPanel() {
         logoutBtn.addEventListener('click', function() {
             localStorage.removeItem('adminLoggedIn');
             showLogin();
+            showAdminMessage('You have been logged out successfully.', 'success');
         });
     }
     
@@ -403,24 +601,40 @@ function initAdminPanel() {
         addImageForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const url = document.getElementById('imageUrl').value;
+            const url = document.getElementById('imageUrl').value.trim();
             const ratio = document.getElementById('imageRatio').value;
+            const caption = document.getElementById('imageCaption').value.trim();
             
             if (!url || !ratio) {
-                showAdminMessage('Please fill in all fields.', 'error');
+                showAdminMessage('Please fill in all required fields (URL and Ratio).', 'error');
+                return;
+            }
+            
+            // Validate URL
+            if (!isValidUrl(url)) {
+                showAdminMessage('Please enter a valid URL for the image.', 'error');
                 return;
             }
             
             // Add image to gallery data
             const galleryData = getGalleryData();
-            galleryData.images.push({ url, ratio });
+            const newImage = { url, ratio };
+            
+            // Add caption if provided
+            if (caption !== '') {
+                newImage.caption = caption.substring(0, 120); // Limit caption length
+            }
+            
+            galleryData.images.push(newImage);
             saveGalleryData(galleryData);
             
             // Update delete dropdown
             updateDeleteDropdowns();
             
             // Show success message
-            showAdminMessage('Image added successfully!', 'success');
+            showAdminMessage('Image added successfully! It will appear in the gallery.', 'success');
+            
+            // Clear form
             addImageForm.reset();
         });
     }
@@ -429,24 +643,40 @@ function initAdminPanel() {
         addVideoForm.addEventListener('submit', function(e) {
             e.preventDefault();
             
-            const url = document.getElementById('videoUrl').value;
+            const url = document.getElementById('videoUrl').value.trim();
             const ratio = document.getElementById('videoRatio').value;
+            const caption = document.getElementById('videoCaption').value.trim();
             
             if (!url || !ratio) {
-                showAdminMessage('Please fill in all fields.', 'error');
+                showAdminMessage('Please fill in all required fields (URL and Ratio).', 'error');
+                return;
+            }
+            
+            // Validate URL
+            if (!isValidUrl(url)) {
+                showAdminMessage('Please enter a valid URL for the video.', 'error');
                 return;
             }
             
             // Add video to gallery data
             const galleryData = getGalleryData();
-            galleryData.videos.push({ url, ratio });
+            const newVideo = { url, ratio };
+            
+            // Add caption if provided
+            if (caption !== '') {
+                newVideo.caption = caption.substring(0, 120); // Limit caption length
+            }
+            
+            galleryData.videos.push(newVideo);
             saveGalleryData(galleryData);
             
             // Update delete dropdown
             updateDeleteDropdowns();
             
             // Show success message
-            showAdminMessage('Video added successfully!', 'success');
+            showAdminMessage('Video added successfully! It will appear in the gallery.', 'success');
+            
+            // Clear form
             addVideoForm.reset();
         });
     }
@@ -462,6 +692,11 @@ function initAdminPanel() {
                 return;
             }
             
+            // Confirm deletion
+            if (!confirm('Are you sure you want to delete this image?')) {
+                return;
+            }
+            
             // Delete image from gallery data
             const galleryData = getGalleryData();
             galleryData.images.splice(index, 1);
@@ -472,6 +707,8 @@ function initAdminPanel() {
             
             // Show success message
             showAdminMessage('Image deleted successfully!', 'success');
+            
+            // Clear form
             deleteImageForm.reset();
         });
     }
@@ -487,6 +724,11 @@ function initAdminPanel() {
                 return;
             }
             
+            // Confirm deletion
+            if (!confirm('Are you sure you want to delete this video?')) {
+                return;
+            }
+            
             // Delete video from gallery data
             const galleryData = getGalleryData();
             galleryData.videos.splice(index, 1);
@@ -497,24 +739,34 @@ function initAdminPanel() {
             
             // Show success message
             showAdminMessage('Video deleted successfully!', 'success');
+            
+            // Clear form
             deleteVideoForm.reset();
         });
     }
     
+    // Utility functions
     function showLogin() {
-        if (loginForm) loginForm.parentElement.style.display = 'block';
+        const loginContainer = document.getElementById('loginContainer');
+        if (loginContainer) loginContainer.style.display = 'block';
         if (dashboard) dashboard.style.display = 'none';
     }
     
     function showDashboard() {
-        if (loginForm) loginForm.parentElement.style.display = 'none';
+        const loginContainer = document.getElementById('loginContainer');
+        if (loginContainer) loginContainer.style.display = 'none';
         if (dashboard) dashboard.style.display = 'block';
     }
     
     function getGalleryData() {
         const savedData = localStorage.getItem('galleryData');
         if (savedData) {
-            return JSON.parse(savedData);
+            try {
+                return JSON.parse(savedData);
+            } catch (error) {
+                console.error('Error parsing gallery data:', error);
+                return { images: [], videos: [] };
+            }
         }
         
         // Return default structure if no data exists
@@ -540,7 +792,9 @@ function initAdminPanel() {
             galleryData.images.forEach((image, index) => {
                 const option = document.createElement('option');
                 option.value = index;
-                option.textContent = `Image ${index + 1}: ${image.url.substring(0, 50)}...`;
+                const captionText = image.caption ? ` - ${image.caption.substring(0, 40)}...` : '';
+                const urlText = image.url.length > 40 ? image.url.substring(0, 40) + '...' : image.url;
+                option.textContent = `Image ${index + 1}: ${urlText}${captionText}`;
                 deleteImageSelect.appendChild(option);
             });
         }
@@ -553,7 +807,9 @@ function initAdminPanel() {
             galleryData.videos.forEach((video, index) => {
                 const option = document.createElement('option');
                 option.value = index;
-                option.textContent = `Video ${index + 1}: ${video.url.substring(0, 50)}...`;
+                const captionText = video.caption ? ` - ${video.caption.substring(0, 40)}...` : '';
+                const urlText = video.url.length > 40 ? video.url.substring(0, 40) + '...' : video.url;
+                option.textContent = `Video ${index + 1}: ${urlText}${captionText}`;
                 deleteVideoSelect.appendChild(option);
             });
         }
@@ -570,6 +826,15 @@ function initAdminPanel() {
             setTimeout(() => {
                 messageDiv.style.display = 'none';
             }, 3000);
+        }
+    }
+    
+    function isValidUrl(string) {
+        try {
+            new URL(string);
+            return true;
+        } catch (_) {
+            return false;
         }
     }
 }
