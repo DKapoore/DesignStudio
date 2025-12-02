@@ -2,27 +2,33 @@
   "images": [
     {
       "url": "https://images.unsplash.com/photo-1567446537710-0c5ff5a6ac32?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-      "ratio": "1:1"
+      "ratio": "1:1",
+      "caption": "Modern brand identity design with vibrant color palette for a tech startup."
     },
     {
       "url": "https://images.unsplash.com/photo-1634942537034-2531766767d1?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-      "ratio": "16:9"
+      "ratio": "16:9",
+      "caption": "Social media campaign graphics for a fashion brand's summer collection."
     },
     {
       "url": "https://images.unsplash.com/photo-1581291518633-83b4ebd1d83e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-      "ratio": "4:5"
+      "ratio": "4:5",
+      "caption": "Product packaging design with minimalist aesthetic for organic skincare line."
     },
     {
       "url": "https://images.unsplash.com/photo-1607082348824-0a96f2a4b9da?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-      "ratio": "1:1"
+      "ratio": "1:1",
+      "caption": "Logo redesign for a coffee shop chain focusing on heritage and tradition."
     },
     {
       "url": "https://images.unsplash.com/photo-1586717791821-3f44a563fa4c?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-      "ratio": "16:9"
+      "ratio": "16:9",
+      "caption": "Website UI/UX design with dark mode for a financial services platform."
     },
     {
       "url": "https://images.unsplash.com/photo-1551744830-b23b8f8e6c2f?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-      "ratio": "9:16"
+      "ratio": "9:16",
+      "caption": "Mobile app interface design for fitness tracking with intuitive navigation."
     },
     {
       "url": "https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
@@ -30,13 +36,15 @@
     },
     {
       "url": "https://images.unsplash.com/photo-1581094794329-c8112a89af12?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=1000&q=80",
-      "ratio": "16:9"
+      "ratio": "16:9",
+      "caption": "Event poster design for music festival with bold typography and vibrant colors."
     }
   ],
   "videos": [
     {
       "url": "https://assets.mixkit.co/videos/preview/mixkit-close-up-of-a-blue-butterfly-1257-large.mp4",
-      "ratio": "16:9"
+      "ratio": "16:9",
+      "caption": "Motion graphics showcase for brand identity reveal with smooth transitions."
     },
     {
       "url": "https://assets.mixkit.co/videos/preview/mixkit-aerial-view-of-a-lake-at-sunset-1250-large.mp4",
@@ -44,11 +52,13 @@
     },
     {
       "url": "https://assets.mixkit.co/videos/preview/mixkit-abstract-red-geometric-shapes-rotating-1256-large.mp4",
-      "ratio": "1:1"
+      "ratio": "1:1",
+      "caption": "3D animation logo reveal for a modern architecture firm with geometric elements."
     },
     {
       "url": "https://assets.mixkit.co/videos/preview/mixkit-geometric-animation-with-colors-1258-large.mp4",
-      "ratio": "9:16"
+      "ratio": "9:16",
+      "caption": "Social media video ad with kinetic typography for product launch campaign."
     }
   ]
 }
