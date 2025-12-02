@@ -683,6 +683,34 @@ section {
     z-index: 2;
 }
 
+/* Add to style.css - Gallery item caption styles */
+.gallery-item-caption {
+    padding: 15px;
+    background-color: white;
+    font-size: 0.9rem;
+    color: var(--dark-color);
+    line-height: 1.4;
+    border-top: 1px solid var(--light-gray);
+}
+
+.gallery-item:hover .gallery-item-caption {
+    color: var(--primary-color);
+}
+
+/* Lightbox caption update */
+.lightbox-caption {
+    position: absolute;
+    bottom: -60px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 1.1rem;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
+}
+
 .item-ratio-1-1 {
     width: 100%;
 }
@@ -798,6 +826,19 @@ section {
     text-align: center;
     color: white;
     font-size: 1.1rem;
+}
+/* Lightbox caption update */
+.lightbox-caption {
+    position: absolute;
+    bottom: -60px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    color: white;
+    font-size: 1.1rem;
+    padding: 10px;
+    background-color: rgba(0, 0, 0, 0.7);
+    border-radius: 5px;
 }
 
 /* Admin Page */
