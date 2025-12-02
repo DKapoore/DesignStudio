@@ -18,7 +18,6 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="gallery.html">Gallery</a></li>
                 <li><a href="index.html#contact">Contact</a></li>
-                <li><a href="admin.html" class="admin-link">Admin</a></li>
             </ul>
             <div class="hamburger">
                 <span></span>
@@ -46,7 +45,7 @@
                     </div>
                     <button type="submit" class="btn btn-primary login-btn">Login <i class="fas fa-sign-in-alt"></i></button>
                     <p class="demo-credentials" style="margin-top: 20px; text-align: center; font-size: 0.9rem; color: var(--gray-color);">
-                        Demo credentials: admin / admin123
+                        Default credentials: admin / admin123
                     </p>
                 </form>
             </div>
@@ -59,6 +58,26 @@
                 </div>
                 
                 <div id="adminMessage" class="admin-message"></div>
+                
+                <!-- Change Password Card -->
+                <div class="dashboard-card" style="grid-column: 1 / -1; margin-bottom: 30px;">
+                    <h3>Change Admin Password</h3>
+                    <form id="changePasswordForm">
+                        <div class="form-group">
+                            <label for="currentPassword">Current Password</label>
+                            <input type="password" id="currentPassword" name="currentPassword" placeholder="Enter current password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="newPassword">New Password</label>
+                            <input type="password" id="newPassword" name="newPassword" placeholder="Enter new password" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="confirmPassword">Confirm New Password</label>
+                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm new password" required>
+                        </div>
+                        <button type="submit" class="btn btn-primary">Change Password <i class="fas fa-key"></i></button>
+                    </form>
+                </div>
                 
                 <div class="dashboard-grid">
                     <!-- Add Image Form -->
@@ -81,6 +100,10 @@
                                     <option value="vertical">Vertical</option>
                                     <option value="horizontal">Horizontal</option>
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="imageCaption">Caption (Optional - 2 lines max)</label>
+                                <textarea id="imageCaption" name="imageCaption" rows="3" placeholder="Brief description about the image (optional)"></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">Add Image <i class="fas fa-plus"></i></button>
                         </form>
@@ -106,6 +129,10 @@
                                     <option value="vertical">Vertical</option>
                                     <option value="horizontal">Horizontal</option>
                                 </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="videoCaption">Caption (Optional - 2 lines max)</label>
+                                <textarea id="videoCaption" name="videoCaption" rows="3" placeholder="Brief description about the video (optional)"></textarea>
                             </div>
                             <button type="submit" class="btn btn-primary">Add Video <i class="fas fa-plus"></i></button>
                         </form>
@@ -146,7 +173,7 @@
                     <h3>How it works</h3>
                     <p>This admin panel uses <strong>localStorage</strong> to simulate a backend. All changes you make here will be saved in your browser's local storage.</p>
                     <p>To see changes reflected in the gallery, refresh the gallery page after making updates.</p>
-                    <p>In a production environment, this would connect to a real backend API to update a database.</p>
+                    <p>Admin credentials are stored locally and can be changed using the "Change Password" section above.</p>
                 </div>
             </div>
         </div>
