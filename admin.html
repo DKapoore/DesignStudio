@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Design Studio</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔧</text></svg>">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="container">
+            <a href="index.html" class="logo">Design<span>Studio</span></a>
+            <ul class="nav-links">
+                <li><a href="index.html">Home</a></li>
+                <li><a href="gallery.html">Gallery</a></li>
+                <li><a href="index.html#contact">Contact</a></li>
+                <li><a href="admin.html" class="admin-link">Admin</a></li>
+            </ul>
+            <div class="hamburger">
+                <span></span>
+                <span></span>
+                <span></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Admin Panel -->
+    <section class="admin-page">
+        <div class="container">
+            <!-- Login Form -->
+            <div class="login-container" id="loginContainer">
+                <h2 class="login-title">Admin Login</h2>
+                <p class="section-subtitle">Enter your credentials to access the admin panel</p>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" name="username" placeholder="Enter username" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter password" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary login-btn">Login <i class="fas fa-sign-in-alt"></i></button>
+                    <p class="demo-credentials" style="margin-top: 20px; text-align: center; font-size: 0.9rem; color: var(--gray-color);">
+                        Demo credentials: admin / admin123
+                    </p>
+                </form>
+            </div>
+
+            <!-- Dashboard -->
+            <div class="dashboard-container" id="dashboard" style="display: none;">
+                <div class="dashboard-header">
+                    <h2 class="dashboard-title">Admin Dashboard</h2>
+                    <button class="logout-btn" id="logoutBtn">Logout <i class="fas fa-sign-out-alt"></i></button>
+                </div>
+                
+                <div id="adminMessage" class="admin-message"></div>
+                
+                <div class="dashboard-grid">
+                    <!-- Add Image Form -->
+                    <div class="dashboard-card">
+                        <h3>Add New Image</h3>
+                        <form id="addImageForm">
+                            <div class="form-group">
+                                <label for="imageUrl">Image URL</label>
+                                <input type="url" id="imageUrl" name="imageUrl" placeholder="https://example.com/image.jpg" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="imageRatio">Image Ratio</label>
+                                <select id="imageRatio" name="imageRatio" required>
+                                    <option value="">Select Ratio</option>
+                                    <option value="1:1">1:1 (Square)</option>
+                                    <option value="4:5">4:5 (Portrait)</option>
+                                    <option value="16:9">16:9 (Wide)</option>
+                                    <option value="9:16">9:16 (Vertical)</option>
+                                    <option value="square">Square</option>
+                                    <option value="vertical">Vertical</option>
+                                    <option value="horizontal">Horizontal</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Image <i class="fas fa-plus"></i></button>
+                        </form>
+                    </div>
+                    
+                    <!-- Add Video Form -->
+                    <div class="dashboard-card">
+                        <h3>Add New Video</h3>
+                        <form id="addVideoForm">
+                            <div class="form-group">
+                                <label for="videoUrl">Video URL</label>
+                                <input type="url" id="videoUrl" name="videoUrl" placeholder="https://example.com/video.mp4" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="videoRatio">Video Ratio</label>
+                                <select id="videoRatio" name="videoRatio" required>
+                                    <option value="">Select Ratio</option>
+                                    <option value="1:1">1:1 (Square)</option>
+                                    <option value="4:5">4:5 (Portrait)</option>
+                                    <option value="16:9">16:9 (Wide)</option>
+                                    <option value="9:16">9:16 (Vertical)</option>
+                                    <option value="square">Square</option>
+                                    <option value="vertical">Vertical</option>
+                                    <option value="horizontal">Horizontal</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary">Add Video <i class="fas fa-plus"></i></button>
+                        </form>
+                    </div>
+                    
+                    <!-- Delete Image Form -->
+                    <div class="dashboard-card">
+                        <h3>Delete Image</h3>
+                        <form id="deleteImageForm">
+                            <div class="form-group">
+                                <label for="deleteImageSelect">Select Image to Delete</label>
+                                <select id="deleteImageSelect" name="deleteImageSelect" required>
+                                    <option value="">Select an image to delete</option>
+                                    <!-- Options will be loaded dynamically -->
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-secondary">Delete Image <i class="fas fa-trash"></i></button>
+                        </form>
+                    </div>
+                    
+                    <!-- Delete Video Form -->
+                    <div class="dashboard-card">
+                        <h3>Delete Video</h3>
+                        <form id="deleteVideoForm">
+                            <div class="form-group">
+                                <label for="deleteVideoSelect">Select Video to Delete</label>
+                                <select id="deleteVideoSelect" name="deleteVideoSelect" required>
+                                    <option value="">Select a video to delete</option>
+                                    <!-- Options will be loaded dynamically -->
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-secondary">Delete Video <i class="fas fa-trash"></i></button>
+                        </form>
+                    </div>
+                </div>
+                
+                <div class="dashboard-info" style="margin-top: 40px; padding: 20px; background-color: var(--light-color); border-radius: var(--border-radius);">
+                    <h3>How it works</h3>
+                    <p>This admin panel uses <strong>localStorage</strong> to simulate a backend. All changes you make here will be saved in your browser's local storage.</p>
+                    <p>To see changes reflected in the gallery, refresh the gallery page after making updates.</p>
+                    <p>In a production environment, this would connect to a real backend API to update a database.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Script -->
+    <script src="script.js"></script>
+</body>
+</html>
