@@ -1,4 +1,23 @@
 {
   "username": "admin",
-  "password": "admin123"
+  "password": "Dev@12",
+  "createdAt": "2023-01-01T00:00:00.000Z",
+  "lastUpdated": "2023-01-01T00:00:00.000Z",
+  "security": {
+    "passwordMinLength": 6,
+    "requireSpecialChars": false,
+    "requireNumbers": true,
+    "requireUppercase": false
+  },
+  "settings": {
+    "autoSave": true,
+    "backupInterval": "weekly",
+    "maxImageSize": "5MB",
+    "maxVideoSize": "50MB",
+    "allowedFormats": {
+      "images": ["jpg", "jpeg", "png", "gif", "webp"],
+      "videos": ["mp4", "webm", "ogg"]
+    }
+  },
+  "version": "1.0.0"
 }
