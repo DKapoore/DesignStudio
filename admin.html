@@ -8,6 +8,138 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&family=Montserrat:wght@800;900&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🔧</text></svg>">
+    <style>
+        /* Additional admin-specific styles */
+        .password-strength {
+            margin-top: 5px;
+            font-size: 0.85rem;
+            padding: 5px 10px;
+            border-radius: 4px;
+            display: none;
+        }
+        
+        .password-strength.weak {
+            background-color: rgba(244, 67, 54, 0.1);
+            color: #f44336;
+            display: block;
+        }
+        
+        .password-strength.medium {
+            background-color: rgba(255, 152, 0, 0.1);
+            color: #ff9800;
+            display: block;
+        }
+        
+        .password-strength.strong {
+            background-color: rgba(76, 175, 80, 0.1);
+            color: #4caf50;
+            display: block;
+        }
+        
+        .password-requirements {
+            font-size: 0.8rem;
+            color: var(--gray-color);
+            margin-top: 5px;
+            padding-left: 15px;
+        }
+        
+        .password-requirements li {
+            list-style-type: disc;
+            margin-bottom: 3px;
+        }
+        
+        .admin-stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+        
+        .stat-box {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            text-align: center;
+        }
+        
+        .stat-box h4 {
+            color: white;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+        
+        .stat-box .number {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 5px;
+        }
+        
+        .stat-box .label {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+        
+        .view-gallery-link {
+            display: inline-block;
+            margin-top: 10px;
+            color: var(--primary-color);
+            font-weight: 500;
+        }
+        
+        .view-gallery-link:hover {
+            text-decoration: underline;
+        }
+        
+        .admin-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+        
+        .admin-actions .btn {
+            flex: 1;
+            min-width: 150px;
+        }
+        
+        .current-user {
+            background-color: rgba(108, 99, 255, 0.1);
+            padding: 10px 15px;
+            border-radius: var(--border-radius-sm);
+            margin-top: 20px;
+            border-left: 4px solid var(--primary-color);
+        }
+        
+        .current-user p {
+            margin-bottom: 0;
+            font-size: 0.9rem;
+        }
+        
+        .current-user strong {
+            color: var(--primary-color);
+        }
+        
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+        
+        @media (max-width: 768px) {
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-stats {
+                grid-template-columns: 1fr;
+            }
+            
+            .admin-actions .btn {
+                min-width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Navigation -->
@@ -18,6 +150,7 @@
                 <li><a href="index.html">Home</a></li>
                 <li><a href="gallery.html">Gallery</a></li>
                 <li><a href="index.html#contact">Contact</a></li>
+                <!-- Admin link is hidden from main navigation as requested -->
             </ul>
             <div class="hamburger">
                 <span></span>
@@ -34,113 +167,192 @@
             <div class="login-container" id="loginContainer">
                 <h2 class="login-title">Admin Login</h2>
                 <p class="section-subtitle">Enter your credentials to access the admin panel</p>
+                
                 <form id="loginForm">
                     <div class="form-group">
-                        <label for="username">Username</label>
-                        <input type="text" id="username" name="username" placeholder="Enter username" required>
+                        <label for="username"><i class="fas fa-user"></i> Username</label>
+                        <input type="text" id="username" name="username" placeholder="Enter your username" required>
                     </div>
+                    
                     <div class="form-group">
-                        <label for="password">Password</label>
-                        <input type="password" id="password" name="password" placeholder="Enter password" required>
+                        <label for="password"><i class="fas fa-lock"></i> Password</label>
+                        <input type="password" id="password" name="password" placeholder="Enter your password" required>
+                        <div class="password-requirements">
+                            <p>Default credentials: admin / admin123</p>
+                        </div>
                     </div>
-                    <button type="submit" class="btn btn-primary login-btn">Login <i class="fas fa-sign-in-alt"></i></button>
-                    <p class="demo-credentials" style="margin-top: 20px; text-align: center; font-size: 0.9rem; color: var(--gray-color);">
-                        Default credentials: admin / admin123
-                    </p>
+                    
+                    <button type="submit" class="btn btn-primary login-btn">
+                        <i class="fas fa-sign-in-alt"></i> Login
+                    </button>
+                    
+                    <div class="demo-credentials">
+                        <p><i class="fas fa-info-circle"></i> For first-time login, use default credentials above</p>
+                    </div>
                 </form>
             </div>
 
             <!-- Dashboard -->
             <div class="dashboard-container" id="dashboard" style="display: none;">
                 <div class="dashboard-header">
-                    <h2 class="dashboard-title">Admin Dashboard</h2>
-                    <button class="logout-btn" id="logoutBtn">Logout <i class="fas fa-sign-out-alt"></i></button>
+                    <div>
+                        <h2 class="dashboard-title"><i class="fas fa-tachometer-alt"></i> Admin Dashboard</h2>
+                        <p class="section-subtitle" style="text-align: left; margin-bottom: 0;">Manage your portfolio gallery and settings</p>
+                    </div>
+                    <button class="logout-btn" id="logoutBtn">
+                        <i class="fas fa-sign-out-alt"></i> Logout
+                    </button>
                 </div>
                 
+                <!-- Admin Message Display -->
                 <div id="adminMessage" class="admin-message"></div>
                 
-                <!-- Change Password Card -->
-                <div class="dashboard-card" style="grid-column: 1 / -1; margin-bottom: 30px;">
-                    <h3>Change Admin Password</h3>
+                <!-- Current User Info -->
+                <div class="current-user">
+                    <p><i class="fas fa-user-circle"></i> Logged in as: <strong id="currentUsername">admin</strong> | <span id="loginTime"></span></p>
+                </div>
+                
+                <!-- Statistics -->
+                <div class="admin-stats" id="adminStats">
+                    <!-- Stats will be loaded dynamically -->
+                </div>
+                
+                <!-- Change Password Section -->
+                <div class="dashboard-card" style="margin-bottom: 30px;">
+                    <h3><i class="fas fa-key"></i> Change Admin Password</h3>
+                    <p style="margin-bottom: 20px; font-size: 0.95rem;">Update your admin password for security. Password is saved locally in your browser.</p>
+                    
                     <form id="changePasswordForm">
-                        <div class="form-group">
-                            <label for="currentPassword">Current Password</label>
-                            <input type="password" id="currentPassword" name="currentPassword" placeholder="Enter current password" required>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="currentPassword">Current Password</label>
+                                <input type="password" id="currentPassword" name="currentPassword" placeholder="Enter current password" required>
+                            </div>
+                            <div class="form-group">
+                                <label for="newPassword">New Password</label>
+                                <input type="password" id="newPassword" name="newPassword" placeholder="Enter new password" required>
+                                <div id="passwordStrength" class="password-strength"></div>
+                                <div class="password-requirements">
+                                    <p><strong>Password requirements:</strong></p>
+                                    <ul>
+                                        <li>Minimum 6 characters</li>
+                                        <li>Should contain letters and numbers</li>
+                                        <li>Avoid common passwords</li>
+                                    </ul>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label for="confirmPassword">Confirm New Password</label>
+                                <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm new password" required>
+                            </div>
                         </div>
-                        <div class="form-group">
-                            <label for="newPassword">New Password</label>
-                            <input type="password" id="newPassword" name="newPassword" placeholder="Enter new password" required>
+                        
+                        <div class="admin-actions">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-save"></i> Update Password
+                            </button>
+                            <button type="button" class="btn btn-secondary" id="generatePasswordBtn">
+                                <i class="fas fa-random"></i> Generate Strong Password
+                            </button>
                         </div>
-                        <div class="form-group">
-                            <label for="confirmPassword">Confirm New Password</label>
-                            <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm new password" required>
-                        </div>
-                        <button type="submit" class="btn btn-primary">Change Password <i class="fas fa-key"></i></button>
                     </form>
                 </div>
                 
+                <!-- Gallery Management -->
                 <div class="dashboard-grid">
                     <!-- Add Image Form -->
                     <div class="dashboard-card">
-                        <h3>Add New Image</h3>
+                        <h3><i class="fas fa-image"></i> Add New Image</h3>
+                        <p style="margin-bottom: 20px; font-size: 0.95rem;">Add new design work images to your portfolio gallery.</p>
+                        
                         <form id="addImageForm">
                             <div class="form-group">
                                 <label for="imageUrl">Image URL</label>
-                                <input type="url" id="imageUrl" name="imageUrl" placeholder="https://example.com/image.jpg" required>
+                                <input type="url" id="imageUrl" name="imageUrl" placeholder="https://example.com/design-work.jpg" required>
+                                <small style="color: var(--gray-color); font-size: 0.85rem;">Enter a direct link to the image file (JPG, PNG, etc.)</small>
                             </div>
+                            
                             <div class="form-group">
                                 <label for="imageRatio">Image Ratio</label>
                                 <select id="imageRatio" name="imageRatio" required>
-                                    <option value="">Select Ratio</option>
+                                    <option value="">Select Aspect Ratio</option>
                                     <option value="1:1">1:1 (Square)</option>
                                     <option value="4:5">4:5 (Portrait)</option>
-                                    <option value="16:9">16:9 (Wide)</option>
-                                    <option value="9:16">9:16 (Vertical)</option>
-                                    <option value="square">Square</option>
-                                    <option value="vertical">Vertical</option>
-                                    <option value="horizontal">Horizontal</option>
+                                    <option value="16:9">16:9 (Landscape/Widescreen)</option>
+                                    <option value="9:16">9:16 (Vertical/Portrait)</option>
+                                    <option value="square">Square (Same as 1:1)</option>
+                                    <option value="vertical">Vertical (Portrait)</option>
+                                    <option value="horizontal">Horizontal (Landscape)</option>
                                 </select>
+                                <small style="color: var(--gray-color); font-size: 0.85rem;">Select the aspect ratio for proper display in gallery</small>
                             </div>
+                            
                             <div class="form-group">
-                                <label for="imageCaption">Caption (Optional - 2 lines max)</label>
-                                <textarea id="imageCaption" name="imageCaption" rows="3" placeholder="Brief description about the image (optional)"></textarea>
+                                <label for="imageCaption">Caption <span style="color: var(--gray-color); font-weight: normal;">(Optional)</span></label>
+                                <textarea id="imageCaption" name="imageCaption" rows="3" placeholder="Brief description about this design work (2 lines max)"></textarea>
+                                <small style="color: var(--gray-color); font-size: 0.85rem;">Add a short description that will appear below the image</small>
                             </div>
-                            <button type="submit" class="btn btn-primary">Add Image <i class="fas fa-plus"></i></button>
+                            
+                            <div class="admin-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-plus-circle"></i> Add Image
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="clearImageForm">
+                                    <i class="fas fa-times"></i> Clear Form
+                                </button>
+                            </div>
                         </form>
                     </div>
                     
                     <!-- Add Video Form -->
                     <div class="dashboard-card">
-                        <h3>Add New Video</h3>
+                        <h3><i class="fas fa-video"></i> Add New Video</h3>
+                        <p style="margin-bottom: 20px; font-size: 0.95rem;">Add design process videos or motion graphics to your gallery.</p>
+                        
                         <form id="addVideoForm">
                             <div class="form-group">
                                 <label for="videoUrl">Video URL</label>
-                                <input type="url" id="videoUrl" name="videoUrl" placeholder="https://example.com/video.mp4" required>
+                                <input type="url" id="videoUrl" name="videoUrl" placeholder="https://example.com/design-video.mp4" required>
+                                <small style="color: var(--gray-color); font-size: 0.85rem;">Enter a direct link to the video file (MP4, WebM, etc.)</small>
                             </div>
+                            
                             <div class="form-group">
                                 <label for="videoRatio">Video Ratio</label>
                                 <select id="videoRatio" name="videoRatio" required>
-                                    <option value="">Select Ratio</option>
+                                    <option value="">Select Aspect Ratio</option>
                                     <option value="1:1">1:1 (Square)</option>
                                     <option value="4:5">4:5 (Portrait)</option>
-                                    <option value="16:9">16:9 (Wide)</option>
-                                    <option value="9:16">9:16 (Vertical)</option>
-                                    <option value="square">Square</option>
-                                    <option value="vertical">Vertical</option>
-                                    <option value="horizontal">Horizontal</option>
+                                    <option value="16:9">16:9 (Landscape/Widescreen)</option>
+                                    <option value="9:16">9:16 (Vertical/Portrait)</option>
+                                    <option value="square">Square (Same as 1:1)</option>
+                                    <option value="vertical">Vertical (Portrait)</option>
+                                    <option value="horizontal">Horizontal (Landscape)</option>
                                 </select>
+                                <small style="color: var(--gray-color); font-size: 0.85rem;">Select the aspect ratio for proper display in gallery</small>
                             </div>
+                            
                             <div class="form-group">
-                                <label for="videoCaption">Caption (Optional - 2 lines max)</label>
-                                <textarea id="videoCaption" name="videoCaption" rows="3" placeholder="Brief description about the video (optional)"></textarea>
+                                <label for="videoCaption">Caption <span style="color: var(--gray-color); font-weight: normal;">(Optional)</span></label>
+                                <textarea id="videoCaption" name="videoCaption" rows="3" placeholder="Brief description about this video content (2 lines max)"></textarea>
+                                <small style="color: var(--gray-color); font-size: 0.85rem;">Add a short description that will appear below the video</small>
                             </div>
-                            <button type="submit" class="btn btn-primary">Add Video <i class="fas fa-plus"></i></button>
+                            
+                            <div class="admin-actions">
+                                <button type="submit" class="btn btn-primary">
+                                    <i class="fas fa-plus-circle"></i> Add Video
+                                </button>
+                                <button type="button" class="btn btn-secondary" id="clearVideoForm">
+                                    <i class="fas fa-times"></i> Clear Form
+                                </button>
+                            </div>
                         </form>
                     </div>
                     
                     <!-- Delete Image Form -->
                     <div class="dashboard-card">
-                        <h3>Delete Image</h3>
+                        <h3><i class="fas fa-trash-alt"></i> Delete Image</h3>
+                        <p style="margin-bottom: 20px; font-size: 0.95rem;">Remove images from your gallery. This action cannot be undone.</p>
+                        
                         <form id="deleteImageForm">
                             <div class="form-group">
                                 <label for="deleteImageSelect">Select Image to Delete</label>
@@ -148,14 +360,33 @@
                                     <option value="">Select an image to delete</option>
                                     <!-- Options will be loaded dynamically -->
                                 </select>
+                                <small style="color: var(--gray-color); font-size: 0.85rem;">Total images: <span id="totalImagesCount">0</span></small>
                             </div>
-                            <button type="submit" class="btn btn-secondary">Delete Image <i class="fas fa-trash"></i></button>
+                            
+                            <div id="selectedImagePreview" style="margin: 15px 0; display: none;">
+                                <p style="font-weight: 500; margin-bottom: 8px;">Preview:</p>
+                                <div style="max-width: 200px; border-radius: 8px; overflow: hidden; border: 2px solid var(--light-gray);">
+                                    <img id="imagePreview" src="" alt="Selected image" style="width: 100%; height: auto; display: block;">
+                                </div>
+                                <p id="imageCaptionPreview" style="font-size: 0.9rem; margin-top: 8px; color: var(--gray-color);"></p>
+                            </div>
+                            
+                            <div class="admin-actions">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-trash"></i> Delete Selected Image
+                                </button>
+                                <a href="gallery.html" class="btn btn-secondary" target="_blank">
+                                    <i class="fas fa-eye"></i> View Gallery
+                                </a>
+                            </div>
                         </form>
                     </div>
                     
                     <!-- Delete Video Form -->
                     <div class="dashboard-card">
-                        <h3>Delete Video</h3>
+                        <h3><i class="fas fa-trash-alt"></i> Delete Video</h3>
+                        <p style="margin-bottom: 20px; font-size: 0.95rem;">Remove videos from your gallery. This action cannot be undone.</p>
+                        
                         <form id="deleteVideoForm">
                             <div class="form-group">
                                 <label for="deleteVideoSelect">Select Video to Delete</label>
@@ -163,23 +394,430 @@
                                     <option value="">Select a video to delete</option>
                                     <!-- Options will be loaded dynamically -->
                                 </select>
+                                <small style="color: var(--gray-color); font-size: 0.85rem;">Total videos: <span id="totalVideosCount">0</span></small>
                             </div>
-                            <button type="submit" class="btn btn-secondary">Delete Video <i class="fas fa-trash"></i></button>
+                            
+                            <div id="selectedVideoPreview" style="margin: 15px 0; display: none;">
+                                <p style="font-weight: 500; margin-bottom: 8px;">Preview:</p>
+                                <div style="max-width: 200px; border-radius: 8px; overflow: hidden; border: 2px solid var(--light-gray); background-color: #000;">
+                                    <video id="videoPreview" src="" controls style="width: 100%; height: auto; display: block;"></video>
+                                </div>
+                                <p id="videoCaptionPreview" style="font-size: 0.9rem; margin-top: 8px; color: var(--gray-color);"></p>
+                            </div>
+                            
+                            <div class="admin-actions">
+                                <button type="submit" class="btn btn-danger">
+                                    <i class="fas fa-trash"></i> Delete Selected Video
+                                </button>
+                                <a href="gallery.html" class="btn btn-secondary" target="_blank">
+                                    <i class="fas fa-eye"></i> View Gallery
+                                </a>
+                            </div>
                         </form>
                     </div>
                 </div>
                 
-                <div class="dashboard-info" style="margin-top: 40px; padding: 20px; background-color: var(--light-color); border-radius: var(--border-radius);">
-                    <h3>How it works</h3>
-                    <p>This admin panel uses <strong>localStorage</strong> to simulate a backend. All changes you make here will be saved in your browser's local storage.</p>
-                    <p>To see changes reflected in the gallery, refresh the gallery page after making updates.</p>
-                    <p>Admin credentials are stored locally and can be changed using the "Change Password" section above.</p>
+                <!-- Additional Actions -->
+                <div class="dashboard-card" style="margin-top: 30px;">
+                    <h3><i class="fas fa-cogs"></i> Additional Actions</h3>
+                    
+                    <div class="admin-actions">
+                        <button type="button" class="btn btn-secondary" id="exportDataBtn">
+                            <i class="fas fa-download"></i> Export Gallery Data
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="importDataBtn">
+                            <i class="fas fa-upload"></i> Import Gallery Data
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="resetGalleryBtn">
+                            <i class="fas fa-redo"></i> Reset to Default Gallery
+                        </button>
+                        <button type="button" class="btn btn-danger" id="clearAllDataBtn">
+                            <i class="fas fa-broom"></i> Clear All Data
+                        </button>
+                    </div>
+                    
+                    <div style="margin-top: 20px; display: none;" id="importSection">
+                        <div class="form-group">
+                            <label for="importData">Paste Gallery JSON Data</label>
+                            <textarea id="importData" name="importData" rows="5" placeholder='Paste your gallery JSON data here...'></textarea>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="confirmImportBtn">
+                            <i class="fas fa-check"></i> Import Data
+                        </button>
+                        <button type="button" class="btn btn-secondary" id="cancelImportBtn">
+                            <i class="fas fa-times"></i> Cancel
+                        </button>
+                    </div>
+                </div>
+                
+                <!-- Information Panel -->
+                <div class="dashboard-info">
+                    <h3><i class="fas fa-info-circle"></i> How This Admin Panel Works</h3>
+                    <p><strong>Storage:</strong> All data (gallery items, admin credentials) is stored in your browser's <strong>localStorage</strong>. This means:</p>
+                    <ul style="padding-left: 20px; margin-bottom: 15px;">
+                        <li>Data persists even after closing the browser</li>
+                        <li>Data is specific to this browser on this computer</li>
+                        <li>To access from another device, you'll need to set up admin credentials again</li>
+                    </ul>
+                    
+                    <p><strong>Password Security:</strong> The admin password is stored in <code>admin-config.json</code> format in localStorage. For production use:</p>
+                    <ul style="padding-left: 20px; margin-bottom: 15px;">
+                        <li>Consider implementing server-side authentication</li>
+                        <li>Use HTTPS for secure communication</li>
+                        <li>Regularly update your password</li>
+                    </ul>
+                    
+                    <p><strong>Gallery Updates:</strong> After making changes in the admin panel:</p>
+                    <ul style="padding-left: 20px;">
+                        <li>Refresh the gallery page to see changes</li>
+                        <li>Use "View Gallery" buttons to check your updates</li>
+                        <li>Export your gallery data regularly as backup</li>
+                    </ul>
+                    
+                    <div class="current-user" style="margin-top: 20px;">
+                        <p><i class="fas fa-database"></i> <strong>Data Location:</strong> Browser's LocalStorage | <strong>Admin Config:</strong> <code>admin-config.json</code> format</p>
+                    </div>
                 </div>
             </div>
         </div>
     </section>
 
+    <!-- Hidden file input for import -->
+    <input type="file" id="fileImportInput" accept=".json" style="display: none;">
+
     <!-- Script -->
+    <script>
+        // Additional admin-specific JavaScript
+        document.addEventListener('DOMContentLoaded', function() {
+            // Password strength indicator
+            const newPasswordInput = document.getElementById('newPassword');
+            const passwordStrength = document.getElementById('passwordStrength');
+            
+            if (newPasswordInput && passwordStrength) {
+                newPasswordInput.addEventListener('input', function() {
+                    const password = this.value;
+                    let strength = '';
+                    
+                    if (password.length === 0) {
+                        passwordStrength.className = 'password-strength';
+                        passwordStrength.textContent = '';
+                        return;
+                    }
+                    
+                    if (password.length < 6) {
+                        strength = 'weak';
+                        passwordStrength.textContent = 'Password is too short (min 6 characters)';
+                    } else if (password.length < 8) {
+                        strength = 'medium';
+                        passwordStrength.textContent = 'Password could be stronger';
+                    } else if (/^(?=.*[a-zA-Z])(?=.*[0-9]).{8,}$/.test(password)) {
+                        strength = 'strong';
+                        passwordStrength.textContent = 'Strong password!';
+                    } else {
+                        strength = 'medium';
+                        passwordStrength.textContent = 'Include both letters and numbers for better security';
+                    }
+                    
+                    passwordStrength.className = 'password-strength ' + strength;
+                });
+            }
+            
+            // Generate strong password button
+            const generatePasswordBtn = document.getElementById('generatePasswordBtn');
+            if (generatePasswordBtn) {
+                generatePasswordBtn.addEventListener('click', function() {
+                    const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()';
+                    let password = '';
+                    
+                    // Ensure at least one number and one letter
+                    password += getRandomChar('ABCDEFGHIJKLMNOPQRSTUVWXYZ');
+                    password += getRandomChar('abcdefghijklmnopqrstuvwxyz');
+                    password += getRandomChar('0123456789');
+                    password += getRandomChar('!@#$%^&*()');
+                    
+                    // Add remaining characters
+                    for (let i = 0; i < 8; i++) {
+                        password += chars.charAt(Math.floor(Math.random() * chars.length));
+                    }
+                    
+                    // Shuffle the password
+                    password = password.split('').sort(() => 0.5 - Math.random()).join('');
+                    
+                    // Set the password fields
+                    document.getElementById('newPassword').value = password;
+                    document.getElementById('confirmPassword').value = password;
+                    
+                    // Trigger strength indicator
+                    newPasswordInput.dispatchEvent(new Event('input'));
+                    
+                    // Show message
+                    const adminMessage = document.getElementById('adminMessage');
+                    adminMessage.textContent = 'Strong password generated! Make sure to save it somewhere safe.';
+                    adminMessage.className = 'admin-message success';
+                    adminMessage.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        adminMessage.style.display = 'none';
+                    }, 5000);
+                });
+                
+                function getRandomChar(charSet) {
+                    return charSet.charAt(Math.floor(Math.random() * charSet.length));
+                }
+            }
+            
+            // Clear form buttons
+            const clearImageFormBtn = document.getElementById('clearImageForm');
+            if (clearImageFormBtn) {
+                clearImageFormBtn.addEventListener('click', function() {
+                    document.getElementById('addImageForm').reset();
+                });
+            }
+            
+            const clearVideoFormBtn = document.getElementById('clearVideoForm');
+            if (clearVideoFormBtn) {
+                clearVideoFormBtn.addEventListener('click', function() {
+                    document.getElementById('addVideoForm').reset();
+                });
+            }
+            
+            // Image preview on select
+            const deleteImageSelect = document.getElementById('deleteImageSelect');
+            if (deleteImageSelect) {
+                deleteImageSelect.addEventListener('change', function() {
+                    const index = this.value;
+                    const previewContainer = document.getElementById('selectedImagePreview');
+                    
+                    if (index) {
+                        const galleryData = JSON.parse(localStorage.getItem('galleryData') || '{"images":[],"videos":[]}');
+                        const image = galleryData.images[index];
+                        
+                        if (image) {
+                            document.getElementById('imagePreview').src = image.url;
+                            document.getElementById('imageCaptionPreview').textContent = image.caption || 'No caption';
+                            previewContainer.style.display = 'block';
+                        }
+                    } else {
+                        previewContainer.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Video preview on select
+            const deleteVideoSelect = document.getElementById('deleteVideoSelect');
+            if (deleteVideoSelect) {
+                deleteVideoSelect.addEventListener('change', function() {
+                    const index = this.value;
+                    const previewContainer = document.getElementById('selectedVideoPreview');
+                    
+                    if (index) {
+                        const galleryData = JSON.parse(localStorage.getItem('galleryData') || '{"images":[],"videos":[]}');
+                        const video = galleryData.videos[index];
+                        
+                        if (video) {
+                            const videoElement = document.getElementById('videoPreview');
+                            videoElement.src = video.url;
+                            videoElement.load();
+                            document.getElementById('videoCaptionPreview').textContent = video.caption || 'No caption';
+                            previewContainer.style.display = 'block';
+                        }
+                    } else {
+                        previewContainer.style.display = 'none';
+                    }
+                });
+            }
+            
+            // Export data button
+            const exportDataBtn = document.getElementById('exportDataBtn');
+            if (exportDataBtn) {
+                exportDataBtn.addEventListener('click', function() {
+                    const galleryData = localStorage.getItem('galleryData');
+                    const adminCredentials = localStorage.getItem('adminCredentials');
+                    
+                    const exportData = {
+                        gallery: JSON.parse(galleryData || '{"images":[],"videos":[]}'),
+                        adminConfig: JSON.parse(adminCredentials || '{"username":"admin","password":"admin123"}'),
+                        exportDate: new Date().toISOString(),
+                        version: '1.0'
+                    };
+                    
+                    const dataStr = JSON.stringify(exportData, null, 2);
+                    const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+                    
+                    const exportFileDefaultName = 'design-studio-backup-' + new Date().toISOString().split('T')[0] + '.json';
+                    
+                    const linkElement = document.createElement('a');
+                    linkElement.setAttribute('href', dataUri);
+                    linkElement.setAttribute('download', exportFileDefaultName);
+                    linkElement.click();
+                    
+                    // Show success message
+                    const adminMessage = document.getElementById('adminMessage');
+                    adminMessage.textContent = 'Data exported successfully! File: ' + exportFileDefaultName;
+                    adminMessage.className = 'admin-message success';
+                    adminMessage.style.display = 'block';
+                    
+                    setTimeout(() => {
+                        adminMessage.style.display = 'none';
+                    }, 5000);
+                });
+            }
+            
+            // Import data button
+            const importDataBtn = document.getElementById('importDataBtn');
+            const importSection = document.getElementById('importSection');
+            const confirmImportBtn = document.getElementById('confirmImportBtn');
+            const cancelImportBtn = document.getElementById('cancelImportBtn');
+            const fileImportInput = document.getElementById('fileImportInput');
+            
+            if (importDataBtn) {
+                importDataBtn.addEventListener('click', function() {
+                    importSection.style.display = 'block';
+                });
+            }
+            
+            if (cancelImportBtn) {
+                cancelImportBtn.addEventListener('click', function() {
+                    importSection.style.display = 'none';
+                    document.getElementById('importData').value = '';
+                });
+            }
+            
+            if (confirmImportBtn) {
+                confirmImportBtn.addEventListener('click', function() {
+                    const importDataText = document.getElementById('importData').value;
+                    
+                    if (!importDataText.trim()) {
+                        alert('Please paste JSON data to import');
+                        return;
+                    }
+                    
+                    try {
+                        const importedData = JSON.parse(importDataText);
+                        
+                        // Validate imported data structure
+                        if (importedData.gallery && importedData.adminConfig) {
+                            if (confirm('This will overwrite your current gallery and admin settings. Continue?')) {
+                                localStorage.setItem('galleryData', JSON.stringify(importedData.gallery));
+                                localStorage.setItem('adminCredentials', JSON.stringify(importedData.adminConfig));
+                                
+                                // Reload the page to reflect changes
+                                location.reload();
+                            }
+                        } else {
+                            alert('Invalid data format. Expected gallery and adminConfig properties.');
+                        }
+                    } catch (error) {
+                        alert('Invalid JSON data: ' + error.message);
+                    }
+                });
+            }
+            
+            // File import
+            const fileImportBtn = document.createElement('button');
+            fileImportBtn.className = 'btn btn-secondary';
+            fileImportBtn.innerHTML = '<i class="fas fa-file-import"></i> Import from File';
+            fileImportBtn.style.marginLeft = '10px';
+            fileImportBtn.addEventListener('click', function() {
+                fileImportInput.click();
+            });
+            
+            importDataBtn.parentNode.insertBefore(fileImportBtn, importDataBtn.nextSibling);
+            
+            fileImportInput.addEventListener('change', function(e) {
+                const file = e.target.files[0];
+                if (file) {
+                    const reader = new FileReader();
+                    reader.onload = function(event) {
+                        document.getElementById('importData').value = event.target.result;
+                        importSection.style.display = 'block';
+                    };
+                    reader.readAsText(file);
+                }
+            });
+            
+            // Reset gallery button
+            const resetGalleryBtn = document.getElementById('resetGalleryBtn');
+            if (resetGalleryBtn) {
+                resetGalleryBtn.addEventListener('click', function() {
+                    if (confirm('This will reset your gallery to the original default images and videos. Continue?')) {
+                        // Fetch default gallery.json
+                        fetch('gallery.json')
+                            .then(response => response.json())
+                            .then(data => {
+                                localStorage.setItem('galleryData', JSON.stringify(data));
+                                location.reload();
+                            })
+                            .catch(error => {
+                                alert('Error loading default gallery: ' + error.message);
+                            });
+                    }
+                });
+            }
+            
+            // Clear all data button
+            const clearAllDataBtn = document.getElementById('clearAllDataBtn');
+            if (clearAllDataBtn) {
+                clearAllDataBtn.addEventListener('click', function() {
+                    if (confirm('⚠️ WARNING: This will delete ALL data including gallery items and admin credentials! This cannot be undone. Continue?')) {
+                        localStorage.clear();
+                        alert('All data cleared. Page will reload.');
+                        location.reload();
+                    }
+                });
+            }
+            
+            // Update login time
+            function updateLoginTime() {
+                const loginTimeElement = document.getElementById('loginTime');
+                if (loginTimeElement) {
+                    const now = new Date();
+                    loginTimeElement.textContent = 'Logged in at: ' + now.toLocaleTimeString() + ' on ' + now.toLocaleDateString();
+                }
+            }
+            
+            // Update statistics
+            function updateAdminStats() {
+                const galleryData = JSON.parse(localStorage.getItem('galleryData') || '{"images":[],"videos":[]}');
+                const adminCredentials = JSON.parse(localStorage.getItem('adminCredentials') || '{"username":"admin","password":"admin123"}');
+                
+                // Update counts
+                document.getElementById('totalImagesCount').textContent = galleryData.images.length;
+                document.getElementById('totalVideosCount').textContent = galleryData.videos.length;
+                
+                // Update stats grid
+                const statsGrid = document.getElementById('adminStats');
+                if (statsGrid) {
+                    statsGrid.innerHTML = `
+                        <div class="stat-box">
+                            <div class="number">${galleryData.images.length}</div>
+                            <div class="label">Total Images</div>
+                            <a href="gallery.html" class="view-gallery-link" target="_blank">View in Gallery</a>
+                        </div>
+                        <div class="stat-box">
+                            <div class="number">${galleryData.videos.length}</div>
+                            <div class="label">Total Videos</div>
+                            <a href="gallery.html" class="view-gallery-link" target="_blank">View in Gallery</a>
+                        </div>
+                    `;
+                }
+                
+                // Update current username
+                document.getElementById('currentUsername').textContent = adminCredentials.username;
+            }
+            
+            // Initialize when dashboard is shown
+            const checkDashboardInterval = setInterval(function() {
+                const dashboard = document.getElementById('dashboard');
+                if (dashboard && dashboard.style.display !== 'none') {
+                    updateLoginTime();
+                    updateAdminStats();
+                    clearInterval(checkDashboardInterval);
+                }
+            }, 100);
+        });
+    </script>
+    
     <script src="script.js"></script>
 </body>
 </html>
